@@ -2,11 +2,13 @@ import {JSONSchema6} from "json-schema"
 import React, {useEffect, useState} from "react"
 import Form from "react-jsonschema-form"
 import "./App.css"
-import schema from "./settings.schema.json"
 import {Settings} from "./types"
 
 function getUrl() {
     return (window as any).CONFIGURATOR_HOST || "localhost"
+}
+function getSchema() {
+    return JSON.parse((window as any).CONFIGURATOR_SCHEMA || "{}")
 }
 const baseUrl = `http://${getUrl()}/settings`
 
@@ -100,7 +102,7 @@ const App: React.FC = () => {
             </button>
             <div className="form">
                 <Form<Settings>
-                    schema={schema as JSONSchema6}
+                    schema={getSchema() as JSONSchema6}
                     formData={settings!}
                     onChange={({formData}) => setSettings(formData)}
                     onSubmit={async ({formData}) =>
