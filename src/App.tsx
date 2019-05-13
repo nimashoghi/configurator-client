@@ -5,7 +5,7 @@ import "./App.css"
 import {Settings} from "./types"
 
 function getUrl() {
-    return (window as any).CONFIGURATOR_HOST || "localhost"
+    return (window as any).CONFIGURATOR_HOST || "localhost:5000"
 }
 function getSchema() {
     return JSON.parse((window as any).CONFIGURATOR_SCHEMA || "{}")
@@ -93,13 +93,6 @@ const App: React.FC = () => {
 
     return (
         <div className="formContainer">
-            <button
-                onClick={() => {
-                    removePasscode()
-                    document.location.reload()
-                }}>
-                Logout
-            </button>
             <div className="form">
                 <Form<Settings>
                     schema={getSchema() as JSONSchema6}
@@ -108,8 +101,30 @@ const App: React.FC = () => {
                     onSubmit={async ({formData}) =>
                         await updateSettings(passcode, formData)
                     }
-                    onError={() => console.log("errors")}
-                />
+                    onError={e => {
+                        alert(
+                            "Could not validate form. Check console for more information."
+                        )
+                        console.error(e)
+                    }}>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between"
+                        }}>
+                        <button className="btn btn-success" type="submit">
+                            Submit
+                        </button>
+                        <button
+                            className="btn btn-danger"
+                            onClick={() => {
+                                removePasscode()
+                                document.location.reload()
+                            }}>
+                            Logout
+                        </button>
+                    </div>
+                </Form>
             </div>
         </div>
     )
